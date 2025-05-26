@@ -63,35 +63,35 @@ const UserList = ({ selectedUserId, onUserSelect }: UserListProps) => {
   };
 
   return (
-    <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-4 border-b border-gray-200">
+    <div className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col">
+      <div className="p-3 sm:p-4 border-b border-gray-200">
         <h2 className="text-lg font-semibold text-gray-900">Users</h2>
         <p className="text-sm text-gray-500">{users.length} users online</p>
       </div>
       <ScrollArea className="flex-1">
-        <div className="p-2">
+        <div className="p-1 sm:p-2">
           {users.map((profile) => (
             <div
               key={profile.id}
               onClick={() => onUserSelect(profile.id, profile.username || profile.email)}
-              className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors ${
+              className={`flex items-center p-2 sm:p-3 rounded-lg cursor-pointer transition-colors ${
                 selectedUserId === profile.id 
                   ? 'bg-blue-50 border border-blue-200' 
                   : 'hover:bg-gray-50'
               }`}
             >
-              <Avatar className="h-10 w-10">
-                <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white">
+              <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
+                <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white text-xs sm:text-sm">
                   {getInitials(profile.username || '', profile.email)}
                 </AvatarFallback>
               </Avatar>
-              <div className="ml-3 flex-1 min-w-0">
+              <div className="ml-2 sm:ml-3 flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">
                   {profile.username || profile.email.split('@')[0]}
                 </p>
                 <p className="text-xs text-gray-500 truncate">{profile.email}</p>
               </div>
-              <div className={`w-3 h-3 rounded-full ${
+              <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${
                 profile.online_status ? 'bg-green-400' : 'bg-gray-300'
               }`} />
             </div>

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send } from 'lucide-react';
+import { Send, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -20,9 +20,11 @@ interface Message {
 interface ChatAreaProps {
   selectedUserId: string | null;
   selectedUsername: string;
+  onBackToUsers?: () => void;
+  showBackButton?: boolean;
 }
 
-const ChatArea = ({ selectedUserId, selectedUsername }: ChatAreaProps) => {
+const ChatArea = ({ selectedUserId, selectedUsername, onBackToUsers, showBackButton }: ChatAreaProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [conversationId, setConversationId] = useState<string | null>(null);
@@ -176,10 +178,10 @@ const ChatArea = ({ selectedUserId, selectedUsername }: ChatAreaProps) => {
 
   if (!selectedUserId) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gray-50">
+      <div className="flex-1 flex items-center justify-center bg-gray-50 p-4">
         <div className="text-center">
           <h3 className="text-lg font-medium text-gray-900 mb-2">Welcome to Messaging</h3>
-          <p className="text-gray-600">Select a user from the list to start chatting</p>
+          <p className="text-gray-600 text-sm sm:text-base">Select a user from the list to start chatting</p>
         </div>
       </div>
     );
@@ -188,41 +190,51 @@ const ChatArea = ({ selectedUserId, selectedUsername }: ChatAreaProps) => {
   return (
     <div className="flex-1 flex flex-col bg-white">
       {/* Chat Header */}
-      <div className="p-4 border-b border-gray-200 bg-white">
+      <div className="p-3 sm:p-4 border-b border-gray-200 bg-white">
         <div className="flex items-center">
-          <Avatar className="h-10 w-10">
-            <AvatarFallback className="bg-gradient-to-br from-green-400 to-blue-500 text-white">
+          {showBackButton && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onBackToUsers}
+              className="mr-2 md:hidden"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
+          <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
+            <AvatarFallback className="bg-gradient-to-br from-green-400 to-blue-500 text-white text-xs sm:text-sm">
               {getInitials(selectedUsername)}
             </AvatarFallback>
           </Avatar>
-          <div className="ml-3">
-            <h3 className="text-lg font-medium text-gray-900">{selectedUsername}</h3>
-            <p className="text-sm text-gray-500">Online</p>
+          <div className="ml-2 sm:ml-3">
+            <h3 className="text-base sm:text-lg font-medium text-gray-900">{selectedUsername}</h3>
+            <p className="text-xs sm:text-sm text-gray-500">Online</p>
           </div>
         </div>
       </div>
 
       {/* Messages Area */}
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-2 sm:p-4">
         {loading ? (
           <div className="flex justify-center">
             <p className="text-gray-500">Loading messages...</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {messages.map((message) => (
               <div
                 key={message.id}
                 className={`flex ${message.sender_id === user?.id ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  className={`max-w-[80%] sm:max-w-xs lg:max-w-md px-3 sm:px-4 py-2 rounded-lg ${
                     message.sender_id === user?.id
                       ? 'bg-blue-500 text-white rounded-br-none'
                       : 'bg-gray-100 text-gray-900 rounded-bl-none'
                   }`}
                 >
-                  <p className="text-sm">{message.content}</p>
+                  <p className="text-sm break-words">{message.content}</p>
                   <p className={`text-xs mt-1 ${
                     message.sender_id === user?.id ? 'text-blue-100' : 'text-gray-500'
                   }`}>
@@ -237,13 +249,13 @@ const ChatArea = ({ selectedUserId, selectedUsername }: ChatAreaProps) => {
       </ScrollArea>
 
       {/* Message Input */}
-      <div className="p-4 border-t border-gray-200 bg-white">
+      <div className="p-2 sm:p-4 border-t border-gray-200 bg-white">
         <form onSubmit={sendMessage} className="flex space-x-2">
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1"
+            className="flex-1 text-sm sm:text-base"
           />
           <Button type="submit" size="icon" disabled={!newMessage.trim()}>
             <Send className="h-4 w-4" />
